@@ -1,3 +1,33 @@
+require("dotenv").config();
+
+import nodemailer from "nodemailer";
+import sgTransport from "nodemailer-sendgrid-transport";
+
+const sendMail = email => {
+  var options = {
+    auth: {
+      api_user: process.env.SENDGRID_USERNAME,
+      api_key: process.env.SENDGRID_PASSWORD
+    }
+  };
+  const client = nodemailer.createTransport(sgTransport(options));
+  return client.sendMail(email);
+};
+export const sendSecretMail = (adress, secret) => {
+  const email = {
+    from: "admin@prismagram.com",
+    to: adress,
+    subject: "Login Secret Code for Prismagram🔒",
+    html: `Hello! Your login Secret Code is ${secret}.<br />Copy paste on the app/website to login.`
+  };
+  return sendMail(email);
+};
+
+export const generateSecret = () => {
+  const randomAdj = Math.floor(Math.random() * adjs.length);
+  const randomNoun = Math.floor(Math.random() * nouns.length);
+  return `${adjs[randomAdj]} ${nouns[randomNoun]}`;
+};
 const adjs = [
   "abounding",
   "brief",
@@ -1002,9 +1032,3 @@ const nouns = [
   "payment",
   "holiday"
 ];
-
-export const generateSecret = () => {
-  const randomAdj = Math.floor(Math.random() * adjs.length);
-  const randomNoun = Math.floor(Math.random() * nouns.length);
-  return `${adjs[randomAdj]} ${nouns[randomNoun]}`;
-};
