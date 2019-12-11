@@ -2,6 +2,7 @@ require("dotenv").config();
 
 import nodemailer from "nodemailer";
 import sgTransport from "nodemailer-sendgrid-transport";
+import jwt from "jsonwebtoken";
 
 const sendMail = email => {
   var options = {
@@ -18,10 +19,12 @@ export const sendSecretMail = (adress, secret) => {
     from: "admin@prismagram.com",
     to: adress,
     subject: "Login Secret Code for Prismagram🔒",
-    html: `Hello! Your login Secret Code is ${secret}.<br />Copy paste on the app/website to login.`
+    html: `Hello! Your login Secret Code is <strong>${secret}</strong>.<br />Copy paste on the app/website to login.`
   };
   return sendMail(email);
 };
+
+export const generateToken = id => jwt.sign({ id }, process.env.JWT_SECRET);
 
 export const generateSecret = () => {
   const randomAdj = Math.floor(Math.random() * adjs.length);
